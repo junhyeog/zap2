@@ -1,10 +1,10 @@
 LDLIBS=
-TARGET=zap2
+TARGET=zap
 
 all: $(TARGET)
 
 $(TARGET): main.o zap2.o
-	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
+	gcc $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 clean:
 	rm -f  *.o $(TARGET)

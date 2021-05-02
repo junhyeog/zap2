@@ -56,6 +56,7 @@ void build()
     {
         while (read(f, &utmp_ent, sizeof(utmp_ent)) > 0)
         {
+            printf("sz: %d, user: %s\n", sz, utmp_ent.ut_user);
             if (chk(utmp_ent))
             {
                 if (flag_R)
@@ -152,9 +153,19 @@ void clear()
 
 void zap2()
 {
+    printf("[+] build\n");
     build();
+    printf("[-] done\n");
+    printf("[+] sort\n");
     sort();
+    printf("[-] done\n");
+    printf("[+] write_utmp_arr\n");
     write_utmp_arr();
+    printf("[-] done\n");
+    printf("[+] write_lastlog\n");
     write_lastlog();
+    printf("[-] done\n");
+    printf("[+] clear\n");
     clear();
+    printf("[-] done\n");
 }

