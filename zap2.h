@@ -1,4 +1,3 @@
-#pragma once
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -36,11 +35,11 @@ struct tm date;
 struct tm date_r;
 
 int compare(const void *a, const void *b);
-void sort();
+void sort_utmp_arr();
 bool chk(struct utmp utmp_ent);
-void build();
+void build_utmp_arr();
 void write_utmp_arr();
-void clear();
+void clear_utmp_arr();
 
 /* lastlog */
 void write_lastlog();

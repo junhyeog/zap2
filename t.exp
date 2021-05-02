@@ -1,0 +1,71 @@
+exec date -s "1 Apr 2021 18:00:00"
+spawn login user
+expect "Password*"
+send "d\r"
+expect "*\$*"
+send "exit"
+
+exec date -s "2 Apr 2021 18:00:00"
+spawn login user
+expect "Password*"
+send "d\r"
+expect "*\$*"
+send "exit"
+
+exec date -s "3 Apr 2021 18:00:00"
+spawn login user2
+expect "Password*"
+send "d\r"
+expect "*\$*"
+send "exit"
+
+exec date -s "4 Apr 2021 18:00:00"
+spawn login user
+expect "Password*"
+send "d\r"
+expect "*\$*"
+send "exit"
+
+exec date -s "5 Apr 2021 18:00:00"
+spawn login attacker
+expect "Password*"
+send "d\r"
+expect "*\$*"
+send "exit"
+
+exec date -s "6 Apr 2021 18:00:00"
+spawn login user2
+expect "Password*"
+send "d\r"
+expect "*\$*"
+send "exit"
+
+exec date -s "7 Apr 2021 18:00:00"
+spawn login attacker
+expect "Password*"
+send "d\r"
+expect "*\$*"
+send "exit"
+
+exec date -s "8 Apr 2021 18:00:00"
+spawn login attacker
+expect "Password*"
+send "d\r"
+expect "*\$*"
+send "exit"
+
+exec date -s "9 Apr 2021 18:00:00"
+spawn login user
+expect "Password*"
+send "d\r"
+expect "*\$*"
+send "exit"
+
+exec date -s "10 Apr 2021 18:00:00"
+spawn login attacker
+expect "Password*"
+send "d\r"
+expect "*\$*"
+send "exit"
+
+exec date -s "27 Apr 2021 18:00:00"

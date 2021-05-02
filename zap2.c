@@ -12,7 +12,7 @@ int compare(const void *a, const void *b)
         return -1;
 };
 
-void sort()
+void sort_utmp_arr()
 {
     qsort(utmp_arr, sz, sizeof(struct utmp *), compare);
     return;
@@ -23,17 +23,19 @@ bool chk(struct utmp utmp_ent)
     bool flag = 1;
     if (flag_t)
     {
-        flag *= strncmp(utmp_ent.ut_line, line, strlen(line)) == 0;
+        flag *= strncmp(utmp_ent.ut_line, line, strlen(line)+1) == 0;
     }
     if (flag_a || flag_A || flag_R)
     {
-        flag *= strncmp(utmp_ent.ut_user, line, strlen(user)) == 0;
+        flag *= strncmp(utmp_ent.ut_user, user, strlen(user)+1) == 0;
+        // printf("chk: a: %s %s %d\n", utmp_ent.ut_user, user, flag);
     }
     if (flag_d)
     {
         time_t tmp_time = (time_t)utmp_ent.ut_time;
         struct tm tmp_date;
         localtime_r(&tmp_time, &tmp_date);
+        // printf("year: %d mon: %d day: %d\n", tmp_date.tm_year, tmp_date.tm_mon, tmp_date.tm_mday);
         flag *= tmp_date.tm_year == date.tm_year;
         flag *= tmp_date.tm_mon == date.tm_mon;
         flag *= tmp_date.tm_mday == date.tm_mday;
@@ -43,58 +45,71 @@ bool chk(struct utmp utmp_ent)
 
 void push_to_arr(struct utmp utmp_ent)
 {
-    utmp_arr[sz++] = (struct utmp *)malloc(sizeof(struct utmp));
+    utmp_arr[sz] = (struct utmp *)malloc(sizeof(struct utmp));
     memcpy(utmp_arr[sz], &utmp_ent, sizeof(struct utmp));
+    sz++;
 }
 
-void build()
+void build_utmp_arr()
 {
     sz = 0;
     struct utmp utmp_ent;
-    int f;
-    if (f = open(path, O_RDWR) >= 0)
+    int f = open(path, O_RDWR);
+    if (f<0){
+        printf("[-] Can't open %s\n", path);
+        exit(EXIT_FAILURE);
+    }
+    // fprintf(stdout,"[+] build: open %s\n", path);
+    while (read(f, &utmp_ent, sizeof(utmp_ent)) > 0)
     {
-        while (read(f, &utmp_ent, sizeof(utmp_ent)) > 0)
+        // printf("sz: %d, user: %s, line: %s, date: %d\n", sz, utmp_ent.ut_user, utmp_ent.ut_line, utmp_ent.ut_time);
+        if (chk(utmp_ent))
         {
-            printf("sz: %d, user: %s\n", sz, utmp_ent.ut_user);
-            if (chk(utmp_ent))
+            if (flag_R)
             {
-                if (flag_R)
+                memcpy(utmp_ent.ut_user, user_r, strlen(user_r) + 1);
+                if (flag_t)
                 {
-                    memcpy(utmp_ent.ut_user, user_r, strlen(user_r) + 1);
-                    if (flag_t)
-                    {
-                        memcpy(utmp_ent.ut_line, line_r, strlen(line_r) + 1);
-                    }
-                    if (flag_d)
-                    {
-                        utmp_ent.ut_time = (int32_t)mktime(&date_r);
-                    }
-                    push_to_arr(utmp_ent);
+                    memcpy(utmp_ent.ut_line, line_r, strlen(line_r) + 1);
                 }
-            }
-            else
-            {
+                if (flag_d)
+                {
+                    long tmp_time = utmp_ent.ut_time;
+                    struct tm tmp_tm;
+                    localtime_r(&tmp_time, &tmp_tm);
+                    tmp_tm.tm_year = date_r.tm_year;
+                    tmp_tm.tm_mon = date_r.tm_mon;
+                    tmp_tm.tm_mday = date_r.tm_mday;
+
+                    utmp_ent.ut_time =  mktime(&tmp_tm);
+                    // utmp_ent.ut_time = (int32_t)mktime(&date_r);
+                }
                 push_to_arr(utmp_ent);
             }
         }
-        close(f);
+        else
+        {
+            push_to_arr(utmp_ent);
+        }
     }
+    close(f);
+    // fprintf(stdout,"---- build end ----\n");
 }
 
 void write_utmp_arr()
 {
-    int f;
-    if (f = open(path, O_RDWR | O_CREAT) >= 0)
-    {
-        int i;
-        for (i = 0; i < sz; i++)
-        {
-            write(f, utmp_arr[i], sizeof(struct utmp));
-        }
-
-        close(f);
+    int f = open(path,  O_WRONLY | O_TRUNC);
+    if (f<0){
+        printf("[-] write_utmp_arr: Can't open %s\n", path);
+        exit(EXIT_FAILURE);
     }
+    int i;
+    for (i = 0; i < sz; i++)
+    {
+        write(f, utmp_arr[i], sizeof(struct utmp));
+    }
+
+    close(f);
 }
 
 void write_lastlog()
@@ -141,7 +156,7 @@ void write_lastlog()
     }
 }
 
-void clear()
+void clear_utmp_arr()
 {
     int i;
     for (i = 0; i < sz; i++)
@@ -153,19 +168,9 @@ void clear()
 
 void zap2()
 {
-    printf("[+] build\n");
-    build();
-    printf("[-] done\n");
-    printf("[+] sort\n");
-    sort();
-    printf("[-] done\n");
-    printf("[+] write_utmp_arr\n");
+    build_utmp_arr();
+    sort_utmp_arr();
     write_utmp_arr();
-    printf("[-] done\n");
-    printf("[+] write_lastlog\n");
     write_lastlog();
-    printf("[-] done\n");
-    printf("[+] clear\n");
-    clear();
-    printf("[-] done\n");
+    clear_utmp_arr();
 }
