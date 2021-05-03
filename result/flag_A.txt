@@ -1,0 +1,98 @@
+ub@ub:~/zap/zap2$ sudo ./t.sh -A a
+b617a6a3ac871bc7bdc58f20635ef50ceea5aa7798212c818cf1a6c5c15f3c67
++--------- check utmp before run zap -----------+
+[+] Run: w
+ 07:48:01 up 18:54,  7 users,  load average: 1.69, 0.73, 0.47
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+
+[+] Run: who -all
+
++---------- check wtmp before run zap ----------+
+[+] Run: last
+a        pts/7                         Sun May  2 07:10    gone - no logout
+u1       pts/6                         Sun May  2 06:10    gone - no logout
+u2       pts/5                         Sun May  2 05:10    gone - no logout
+a        pts/4                         Sat May  1 04:10    gone - no logout
+u1       pts/3                         Sat May  1 03:10    gone - no logout
+u2       pts/2                         Sat May  1 02:10    gone - no logout
+u1       pts/1                         Sat May  1 01:10    gone - no logout
+
+wtmp begins Sat May  1 01:10:53 2021
+
++---------- check lastlog before run zap ----------+
+[+] Run: lastlog
+Username         Port     From             Latest
+root                                       **Never logged in**
+daemon                                     **Never logged in**
+bin                                        **Never logged in**
+sys                                        **Never logged in**
+sync                                       **Never logged in**
+games                                      **Never logged in**
+man                                        **Never logged in**
+lp                                         **Never logged in**
+mail                                       **Never logged in**
+news                                       **Never logged in**
+uucp                                       **Never logged in**
+proxy                                      **Never logged in**
+www-data                                   **Never logged in**
+backup                                     **Never logged in**
+list                                       **Never logged in**
+irc                                        **Never logged in**
+gnats                                      **Never logged in**
+nobody                                     **Never logged in**
+_apt                                       **Never logged in**
+u1               pts/6                     Sun May  2 06:10:53 +0000 2021
+u2               pts/5                     Sun May  2 05:10:53 +0000 2021
+a                pts/7                     Sun May  2 07:10:53 +0000 2021
+
++---------- run zap -A a ----------+
+[+] Run: ./zap -A a
+Zap!
+
++--------- check utmp after run zap -----------+
+[+] Run: w
+ 07:48:03 up 18:54,  5 users,  load average: 1.69, 0.73, 0.47
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+
+[+] Run: who -all
+
++---------- check wtmp after run zap ----------+
+[+] Run: last
+u1       pts/6                         Sun May  2 06:10    gone - no logout
+u2       pts/5                         Sun May  2 05:10    gone - no logout
+u1       pts/3                         Sat May  1 03:10    gone - no logout
+u2       pts/2                         Sat May  1 02:10    gone - no logout
+u1       pts/1                         Sat May  1 01:10    gone - no logout
+
+wtmp begins Sat May  1 01:10:53 2021
+
++---------- check lastlog before run zap ----------+
+[+] Run: lastlog
+Username         Port     From             Latest
+root                                       **Never logged in**
+daemon                                     **Never logged in**
+bin                                        **Never logged in**
+sys                                        **Never logged in**
+sync                                       **Never logged in**
+games                                      **Never logged in**
+man                                        **Never logged in**
+lp                                         **Never logged in**
+mail                                       **Never logged in**
+news                                       **Never logged in**
+uucp                                       **Never logged in**
+proxy                                      **Never logged in**
+www-data                                   **Never logged in**
+backup                                     **Never logged in**
+list                                       **Never logged in**
+irc                                        **Never logged in**
+gnats                                      **Never logged in**
+nobody                                     **Never logged in**
+_apt                                       **Never logged in**
+u1               pts/6                     Sun May  2 06:10:53 +0000 2021
+u2               pts/5                     Sun May  2 05:10:53 +0000 2021
+a                                          **Never logged in**
+
++---------- check rootkit ----------+
+[+] Run: chkwtmp
+
+[+] Run: chklastlog

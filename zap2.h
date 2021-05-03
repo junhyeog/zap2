@@ -26,7 +26,6 @@ bool flag_a; /* by account */
 bool flag_t; /* by tty name */
 bool flag_d; /* by date (mmddyy) */
 
-/* utmp, wtmp */
 char user[UT_NAMESIZE];
 char user_r[UT_NAMESIZE];
 char line[UT_LINESIZE];
@@ -40,8 +39,6 @@ bool chk(struct utmp utmp_ent);
 void build_utmp_arr();
 void write_utmp_arr();
 void clear_utmp_arr();
-
-/* lastlog */
 void write_lastlog();
 
 void zap2();

@@ -1,11 +1,13 @@
 # zap2
 
+## Usage
 ```
-./zap -A attacker
-./zap -a attacker -t pts/5 -d 040521
-./zap -R attacker user -t pts/10 supertty -d 041021 040221
+./zap -A a
+./zap -a a -d 050221 -t pts/7
+./zap -R -R a u1 -t pts/7 pts/0 -d 050221 010101
 ```
 
+## Test with Docker
 ```
-./t.sh -R attacker user -t pts/10 supertty -d 041021 040221
+./t.sh -a a -d 050221 -t pts/7
 ```

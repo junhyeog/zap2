@@ -28,14 +28,12 @@ bool chk(struct utmp utmp_ent)
     if (flag_a || flag_A || flag_R)
     {
         flag *= strncmp(utmp_ent.ut_user, user, strlen(user)+1) == 0;
-        // printf("chk: a: %s %s %d\n", utmp_ent.ut_user, user, flag);
     }
     if (flag_d)
     {
         time_t tmp_time = (time_t)utmp_ent.ut_time;
         struct tm tmp_date;
         localtime_r(&tmp_time, &tmp_date);
-        // printf("year: %d mon: %d day: %d\n", tmp_date.tm_year, tmp_date.tm_mon, tmp_date.tm_mday);
         flag *= tmp_date.tm_year == date.tm_year;
         flag *= tmp_date.tm_mon == date.tm_mon;
         flag *= tmp_date.tm_mday == date.tm_mday;
@@ -56,13 +54,11 @@ void build_utmp_arr()
     struct utmp utmp_ent;
     int f = open(path, O_RDWR);
     if (f<0){
-        printf("[-] Can't open %s\n", path);
+        printf("[-] build_utmp_arr: Can't open %s\n", path);
         exit(EXIT_FAILURE);
     }
-    // fprintf(stdout,"[+] build: open %s\n", path);
     while (read(f, &utmp_ent, sizeof(utmp_ent)) > 0)
     {
-        // printf("sz: %d, user: %s, line: %s, date: %d\n", sz, utmp_ent.ut_user, utmp_ent.ut_line, utmp_ent.ut_time);
         if (chk(utmp_ent))
         {
             if (flag_R)
@@ -82,7 +78,6 @@ void build_utmp_arr()
                     tmp_tm.tm_mday = date_r.tm_mday;
 
                     utmp_ent.ut_time =  mktime(&tmp_tm);
-                    // utmp_ent.ut_time = (int32_t)mktime(&date_r);
                 }
                 push_to_arr(utmp_ent);
             }
@@ -93,7 +88,6 @@ void build_utmp_arr()
         }
     }
     close(f);
-    // fprintf(stdout,"---- build end ----\n");
 }
 
 void write_utmp_arr()
